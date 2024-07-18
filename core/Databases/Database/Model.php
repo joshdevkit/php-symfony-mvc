@@ -3,6 +3,7 @@
 namespace Core\Databases\Database;
 
 use Core\Databases\Database;
+use Core\Databases\DB;
 use PDO;
 
 abstract class Model
@@ -12,9 +13,11 @@ abstract class Model
     protected static $pdo;
     protected $fillable = [];
 
+
     public static function init(PDO $pdo)
     {
         self::$pdo = $pdo;
+        DB::init($pdo);
     }
 
     public static function find($id)
@@ -49,10 +52,9 @@ abstract class Model
         $stmt->execute();
 
         $id = self::$pdo->lastInsertId();
-
+        $data = self::find($id);
         $modelClass = static::class;
         $newModel = new $modelClass();
-        $newModel->primaryKey = $id;
 
         foreach ($data as $key => $value) {
             $newModel->$key = $value;
@@ -165,6 +167,29 @@ abstract class Model
         $stmt->execute(['id' => $this->$foreignKey]);
 
         return $stmt->fetchObject($relatedModel);
+    }
+
+
+    public function save()
+    {
+        $fields = get_object_vars($this);
+
+        if (isset($fields[static::$primaryKey])) {
+            $primaryKeyValue = $fields[static::$primaryKey];
+            $fillableFields = array_intersect_key($fields, array_flip($this->fillable));
+
+            $fieldsToUpdate = '';
+            foreach ($fillableFields as $key => $value) {
+                if ($key !== static::$primaryKey) {
+                    $fieldsToUpdate .= "$key = :$key,";
+                }
+            }
+            $fieldsToUpdate = rtrim($fieldsToUpdate, ',');
+
+            $sql = "UPDATE {$this->table} SET {$fieldsToUpdate} WHERE " . static::$primaryKey . " = :id";
+            $stmt = self::$pdo->prepare($sql);
+            $stmt->execute($fillableFields + ['id' => $primaryKeyValue]);
+        }
     }
 
     public function getTable()

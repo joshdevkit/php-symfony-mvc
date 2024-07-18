@@ -10,7 +10,7 @@ class Auth
 
     public static function user(): ?User
     {
-        self::startSession(); // Ensure session is started
+        self::startSession();
         if (isset($_SESSION[self::$sessionKey])) {
             return unserialize($_SESSION[self::$sessionKey]);
         }
@@ -19,19 +19,20 @@ class Auth
 
     public static function setUser(User $user)
     {
-        self::startSession(); // Ensure session is started
+        self::startSession();
+        unset($user->password);
         $_SESSION[self::$sessionKey] = serialize($user);
     }
 
     public static function check(): bool
     {
-        self::startSession(); // Ensure session is started
+        self::startSession();
         return isset($_SESSION[self::$sessionKey]);
     }
 
     public static function logout(): void
     {
-        self::startSession(); // Ensure session is started
+        self::startSession();
         unset($_SESSION[self::$sessionKey]);
     }
 

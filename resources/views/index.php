@@ -17,5 +17,6 @@ extend('layouts.guest-layout');
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
+
     </div>
 </div>

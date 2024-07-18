@@ -4,7 +4,7 @@
 namespace Core\Exceptions;
 
 
-class NotFoundExeception
+class NotFoundException
 {
     public function __invoke()
     {

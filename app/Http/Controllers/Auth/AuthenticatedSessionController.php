@@ -37,7 +37,7 @@ class AuthenticatedSessionController extends Controller
             $email = $request->input('email');
             $password = $request->input('password');
 
-            $user = User::where('email', $email)->first();
+            $user = User::where('email', $email);
 
             if ($user && password_verify($password, $user->password)) {
                 Auth::setUser($user);
@@ -77,7 +77,6 @@ class AuthenticatedSessionController extends Controller
                 'email' => $request->input('email'),
                 'password' => Hash::make($request->input('password'))
             ]);
-            // dd($user);
             Auth::setUser($user);
             if ($user) {
                 return redirect()->to('/');
