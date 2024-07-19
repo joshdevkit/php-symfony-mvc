@@ -7,6 +7,7 @@ use PDO;
 
 abstract class Model
 {
+    public $id;
     protected $table;
     protected static $primaryKey = 'id';
     protected static $pdo;

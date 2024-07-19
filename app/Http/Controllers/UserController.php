@@ -38,7 +38,7 @@ class UserController extends Controller
 
         if (!empty($request->input('newPassword'))) {
             $rules['currentPassword'] = 'required';
-            $rules['newPassword'] = 'required|min:8|confirmed';
+            $rules['newPassword'] = 'required|min:8|confirm_password';
         }
 
         try {

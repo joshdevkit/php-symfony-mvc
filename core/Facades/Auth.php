@@ -20,9 +20,15 @@ class Auth
     public static function setUser(User $user)
     {
         self::startSession();
-        unset($user->password);
-        $_SESSION[self::$sessionKey] = serialize($user);
+        if (isset($_SESSION[self::$sessionKey])) {
+            $existingUser = unserialize($_SESSION[self::$sessionKey]);
+        } else {
+            $existingUser = $user;
+        }
+        unset($existingUser->password);
+        $_SESSION[self::$sessionKey] = serialize($existingUser);
     }
+
 
     public static function check(): bool
     {
