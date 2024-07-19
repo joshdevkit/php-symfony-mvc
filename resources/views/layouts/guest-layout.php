@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<?= asset('css/bootstrap.min.css') ?>">
     <script src="<?= asset('js/jquery.slim.min.js') ?>"></script>
     <script src="<?= asset('js/bootstrap.bundle.min.js') ?>"></script>
+    <meta name="csrf-token" content="">
 </head>
 
 <body>

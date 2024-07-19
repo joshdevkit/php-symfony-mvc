@@ -37,7 +37,7 @@ class AuthenticatedSessionController extends Controller
             $email = $request->input('email');
             $password = $request->input('password');
 
-            $user = User::where('email', $email);
+            $user = User::findOne('email', $email);
 
             if ($user && password_verify($password, $user->password)) {
                 Auth::setUser($user);

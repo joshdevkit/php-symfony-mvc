@@ -18,5 +18,7 @@ $pdo = Database::connect();
 \Core\Databases\Database\Model::init($pdo);
 $request = Request::createFromGlobals();
 
+
+
 $kernel = new Kernel();
 $kernel->handleRequest($request);

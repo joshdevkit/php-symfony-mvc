@@ -71,7 +71,8 @@ class UserController extends Controller
         $users = DB::table('user_info')
             ->join('users', 'user_info.user_id', '=', 'users.id')
             ->select([
-                'user_info.id',
+                'user_info.*',
+                'user_info.id as user_info_id',
                 'user_info.contact',
                 'user_info.address',
                 'user_info.citizenship',
@@ -81,5 +82,14 @@ class UserController extends Controller
             ]);
 
         return view('user.index', compact('users'));
+    }
+
+    public function destroy(Request $request)
+    {
+
+
+        $userIdToDelete = $request->input('id');
+
+        dd("user to delete: " . $userIdToDelete);
     }
 }

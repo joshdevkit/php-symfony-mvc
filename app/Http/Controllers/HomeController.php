@@ -10,8 +10,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $users = User::all();
-
+        $user = Auth::user();
+        $users = User::where('id', '!=', $user->id ?? '');
         return view('index', compact('users'));
     }
 }

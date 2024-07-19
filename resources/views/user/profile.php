@@ -7,6 +7,19 @@ extend('layouts.guest-layout');
     <div class="jumbotron">
         <h1>Profile Information</h1>
         <form action="/update-profile" method="POST">
+            <?php
+            if (isset($_SESSION['message'])) : ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= $_SESSION['message']; ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php
+                unset($_SESSION['message']);
+            endif;
+            ?>
+
             <div class="mb-3">
                 <label for="name" class="form-label">Name:</label>
                 <input type="text" class="form-control <?php echo isset($errors['name']) ? 'is-invalid' : ''; ?>" id="name" name="name" value="<?= $user->name ?>">
@@ -40,6 +53,7 @@ extend('layouts.guest-layout');
             </div>
 
             <button type="submit" class="btn btn-primary">Update Profile</button>
+            <a href="/user-info" class="btn btn-secondary">View User Information</a>
         </form>
     </div>
 </div>

@@ -2,7 +2,6 @@
 
 namespace Core\Databases\Database;
 
-use Core\Databases\Database;
 use Core\Databases\DB;
 use PDO;
 
@@ -89,18 +88,43 @@ abstract class Model
         $sql = "DELETE FROM {$table} WHERE " . static::$primaryKey . " = :id  ";
         $stmt = self::$pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
-        return $stmt->rowCount();
+        return $stmt;
     }
 
-    public static function where($column, $value)
+    public static function where($column, $operator, $value)
     {
         $table = (new static())->getTable();
-        $sql = "SELECT * FROM {$table} WHERE {$column} = :value ";
+        $validOperators = ['=', '!=', '<', '>', '<=', '>='];
+
+        if (!in_array($operator, $validOperators)) {
+            throw new \InvalidArgumentException("Invalid operator: {$operator}");
+        }
+
+        $sql = "SELECT * FROM {$table} WHERE {$column} {$operator} :value";
         $stmt = self::$pdo->prepare($sql);
         $stmt->bindValue(':value', $value);
         $stmt->execute();
-        return $stmt->fetchObject(static::class);
+
+        return $stmt->fetchAll(PDO::FETCH_CLASS, static::class);
     }
+
+    // public static function where($column, $operator, $value)
+    // {
+    //     $table = (new static())->getTable();
+    //     $validOperators = ['=', '!=', '<', '>', '<=', '>=']; // Define valid operators
+
+    //     if (!in_array($operator, $validOperators)) {
+    //         throw new \InvalidArgumentException("Invalid operator: {$operator}");
+    //     }
+
+    //     $sql = "SELECT * FROM {$table} WHERE {$column} {$operator} :value";
+    //     $stmt = self::$pdo->prepare($sql);
+    //     $stmt->bindValue(':value', $value);
+    //     $stmt->execute();
+
+    //     return $stmt->fetchAll(PDO::FETCH_CLASS, static::class);
+    // }
+
 
     public static function first(array $conditions = [])
     {
